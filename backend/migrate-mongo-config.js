@@ -1,8 +1,21 @@
+const mongoUri = process.env.MONGO_URI || process.env.MONGO_URL || "mongodb://admin:admin123@localhost:27017/techhelp?authSource=admin";
+let databaseName = "techhelp";
+
+try {
+  const parsed = new URL(mongoUri);
+  const path = parsed.pathname.replace(/^\//, "");
+  if (path) {
+    databaseName = path.split("?")[0];
+  }
+} catch (e) {
+  // Ignorar y usar valor por defecto
+}
+
 const config = {
   mongodb: {
     // Configuración de la conexión a MongoDB
-    url: process.env.MONGO_URI || "mongodb://admin:admin123@localhost:27017/techhelp?authSource=admin",
-    databaseName: "techhelp",
+    url: mongoUri,
+    databaseName: databaseName,
     options: {
       useNewUrlParser: true,
       useUnifiedTopology: true,

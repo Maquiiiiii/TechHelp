@@ -52,10 +52,23 @@ app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 # Configure el middleware CORS para habilitar la integración frontend (solicitudes de OPCIONES de verificación previa)
 from fastapi.middleware.cors import CORSMiddleware
+import json
+
+cors_origins_str = os.getenv("CORS_ORIGINS")
+if cors_origins_str:
+    if cors_origins_str.startswith("["):
+        try:
+            origins = json.loads(cors_origins_str)
+        except Exception:
+            origins = [o.strip() for o in cors_origins_str.split(",")]
+    else:
+        origins = [o.strip() for o in cors_origins_str.split(",")]
+else:
+    origins = ["http://localhost:5173", "https://techhelp-security.netlify.app"]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "https://techhelp-security.netlify.app"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

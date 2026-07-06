@@ -8,10 +8,20 @@ def setup_audit_database():
     by setting up a custom database role that permits only 'insert' and 'find'
     actions, blocking any 'update' or 'remove' requests.
     """
-    mongo_uri = os.getenv("MONGO_URI", "mongodb://localhost:27017/techhelp_db")
+    mongo_uri = (
+        os.getenv("MONGO_URI") or 
+        os.getenv("MONGO_URL") or 
+        os.getenv("MONGODB_URL") or 
+        "mongodb://localhost:27017/techhelp_db"
+    )
     print(f"Connecting to MongoDB at {mongo_uri}...")
     client = MongoClient(mongo_uri)
-    db = client.get_database()
+    try:
+        db = client.get_database()
+        if db is None or not db.name:
+            db = client["techhelp_db"]
+    except Exception:
+        db = client["techhelp_db"]
     
     # 1. Crear colección si no existe
     collection_name = "audit_logs"
