@@ -1,0 +1,26 @@
+# Python virtual environment
+venv/
+.venv/
+env/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Environmental variables
+.env
+.env.atlas
+
+# Uploaded files (adjuntos locales)
+uploads/
+
+# Testing cache
+.pytest_cache/
+.anyio_cache/
