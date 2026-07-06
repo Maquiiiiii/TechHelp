@@ -1,31 +1,18 @@
-# docker-compose.atlas.yml — Entorno de PRODUCCIÓN con MongoDB Atlas
-# Uso: docker-compose -f docker-compose.atlas.yml up --build
-#
-# Requiere un archivo .env.atlas en la raíz del proyecto con:
-#   MONGO_URI=mongodb+srv://<usuario>:<password>@<cluster>.mongodb.net/techhelp_db?retryWrites=true&w=majority
-#   JWT_SECRET=<clave-secreta-produccion>
-#   JWT_ALGORITHM=HS256
-#   ACCESS_TOKEN_EXPIRE_MINUTES=60
-
+# docker-compose.yml
+version: "3.9"
 services:
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: techhelp_backend_prod
-    ports:
-      - "8000:8000"
-    env_file:
-      - .env.atlas
-    volumes:
-      - uploads_data:/app/uploads
-    networks:
-      - techhelp_network
+  mongodb:
+    image: mongo:7.0
+    container_name: techhelp_mongo
     restart: unless-stopped
-
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: techhelp_user
+      MONGO_INITDB_ROOT_PASSWORD: techhelp_pass
+      MONGO_INITDB_DATABASE: techhelp_db
+    volumes:
+      - mongo_data:/data/db
 volumes:
-  uploads_data:
-
-networks:
-  techhelp_network:
-    driver: bridge
+  mongo_data:
+    driver: local
