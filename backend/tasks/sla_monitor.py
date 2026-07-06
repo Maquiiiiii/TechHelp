@@ -1,9 +1,14 @@
 import asyncio
 import logging
+import os
 from datetime import datetime, timezone, timedelta
 from backend.config.database import Database
 
 logger = logging.getLogger("techhelp.tasks.sla_monitor")
+
+# URL del frontend para generar links correctos en emails
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
+
 
 def is_5_business_days_passed(from_date: datetime) -> bool:
     """
